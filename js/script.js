@@ -1,3 +1,4 @@
+let total = 0;
 // Focus on the name input
 $('#name').focus();
 // Target the ‘Other’ input field, and hide it initially
@@ -30,3 +31,30 @@ $('#design').on('change', () => {
         }
     }
 });
+
+// Create an element to display the total activity cost
+priceTotal = $('<label>').addClass('total').text('The total price is: $' + total);
+$('.activities').append(priceTotal);
+// Listen for changes in the Activity section
+$('[type="checkbox"]').click((e) => {
+    // Target the activity checked
+    const activityChecked = $(e.target);
+    // Get the text inside the checked activity label
+    const insideText = activityChecked.parent().text();
+    // Get the dollar sign index in the text to locate
+    // the activity cost value
+    const dolIndex = insideText.indexOf('$')
+        // Slice the activity cost value
+    const stringCost = insideText.slice(dolIndex + 1, insideText.length);
+    // Convert the activity cost into an integer value
+    const cost = parseInt(stringCost);
+    // Update and display the total activity cost 
+    if (activityChecked.is(':checked')) {
+        total += cost;
+        $('.total').text('The total price is: $' + total);
+    } else {
+        total -= cost;
+        $('.total').text('The total price is: $' + total);
+    }
+});
+// and disable conflicting activities
