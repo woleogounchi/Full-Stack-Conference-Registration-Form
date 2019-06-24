@@ -7,3 +7,25 @@ $('#design option').eq(0).text("");
 $('#color option:first').before('<option selected="selected">Please select a T-Shirt theme</options>');
 // Hide the colors in the “Color” drop down menu
 $('#color option').hide();
+/* When one of the two themes is selected, only the appropriate colors show in the “Color” 
+drop down menu, and the “Color” field should update to the first available color. */
+$('#design').on('change', () => {
+    /* If “js puns” is selected, hide the three “heart js” option elements in the “Color” 
+    drop down menu, show the three “js puns” option elements, and update the “Color” 
+    field to the first available color. */
+    if ($('#design option:selected').val() === "js puns") {
+        $('#color option').eq(1).attr('selected', true);
+        for (let i = 1; i <= 3; i++) {
+            $('#color option').eq(i).show();
+        }
+        /* If “heart js” is selected, hide the three “js puns” option elements in the “Color” 
+        drop down menu, show the three “heart js” option elements, and update the “Color” 
+        field to the first available color. */
+    } else if ($('#design option:selected').val() === "heart js") {
+        $('#color option').eq(4).attr('selected', true);
+        for (let i = 1; i <= 3; i++) {
+            $('#color option').eq(i).hide();
+            $('#color option').eq(i + 3).show();
+        }
+    }
+});
