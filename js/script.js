@@ -1,3 +1,4 @@
+// Focus on the name input
 $('#name').focus();
 // Target the ‘Other’ input field, and hide it initially
 $("#other-title").hide();
