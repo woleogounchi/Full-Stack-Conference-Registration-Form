@@ -48,20 +48,25 @@ $('[type="checkbox"]').click((e) => {
     const stringCost = insideText.slice(dolIndex + 1, insideText.length);
     // Convert the activity cost into an integer value
     const cost = parseInt(stringCost);
-    // Update, display the total activity cost and disable conflicting activities
+    // Update, display the total activity cost
     if (activityChecked.is(':checked')) {
         total += cost;
         $('.total').text('The total price is: $' + total);
-        // In order to disable any conflicting activities,
-        // first we need to fetch the day and time for each activity 
-        const dashIndex = insideText.indexOf('-');
-        const comIndex = insideText.indexOf(',');
-        const dayNtime = insideText.slice(dashIndex + 1, comIndex);
-        // We may now disable every activity happening at the same day and time 
-        const checkboxes = $('[type="checkbox"]');
-        for (let i = 0; i < checkboxes.length; i++) {
-            const checkboxText = checkboxes.eq(i).parent().text();
-            if (checkboxText.includes(dayNtime) && checkboxText !== insideText) {
+    } else {
+        total -= cost;
+        $('.total').text('The total price is: $' + total);
+    }
+    // In order to disable any conflicting activities,
+    // first we need to fetch the day and time for each activity 
+    const dashIndex = insideText.indexOf('—');
+    const comIndex = insideText.indexOf(',');
+    const dayNtime = insideText.slice(dashIndex + 1, comIndex);
+    // We may now disable every activity happening at the same day and time 
+    const checkboxes = $('[type="checkbox"]');
+    for (let i = 0; i < checkboxes.length; i++) {
+        const checkboxText = checkboxes.eq(i).parent().text();
+        if (checkboxText.includes(dayNtime) && checkboxText !== insideText) {
+            if (activityChecked.is(':checked')) {
                 checkboxes.eq(i).attr("disabled", true);
                 checkboxes.eq(i).parent().css("color", "grey");
             } else {
@@ -69,8 +74,5 @@ $('[type="checkbox"]').click((e) => {
                 checkboxes.eq(i).parent().css("color", "black");
             }
         }
-    } else {
-        total -= cost;
-        $('.total').text('The total price is: $' + total);
     }
 });
