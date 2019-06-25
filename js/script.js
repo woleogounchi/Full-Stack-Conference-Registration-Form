@@ -48,13 +48,29 @@ $('[type="checkbox"]').click((e) => {
     const stringCost = insideText.slice(dolIndex + 1, insideText.length);
     // Convert the activity cost into an integer value
     const cost = parseInt(stringCost);
-    // Update and display the total activity cost 
+    // Update, display the total activity cost and disable conflicting activities
     if (activityChecked.is(':checked')) {
         total += cost;
         $('.total').text('The total price is: $' + total);
+        // In order to disable any conflicting activities,
+        // first we need to fetch the day and time for each activity 
+        const dashIndex = insideText.indexOf('-');
+        const comIndex = insideText.indexOf(',');
+        const dayNtime = insideText.slice(dashIndex + 1, comIndex);
+        // We may now disable every activity happening at the same day and time 
+        const checkboxes = $('[type="checkbox"]');
+        for (let i = 0; i < checkboxes.length; i++) {
+            const checkboxText = checkboxes.eq(i).parent().text();
+            if (checkboxText.includes(dayNtime) && checkboxText !== insideText) {
+                checkboxes.eq(i).attr("disabled", true);
+                checkboxes.eq(i).parent().css("color", "grey");
+            } else {
+                checkboxes.eq(i).attr("disabled", false);
+                checkboxes.eq(i).parent().css("color", "black");
+            }
+        }
     } else {
         total -= cost;
         $('.total').text('The total price is: $' + total);
     }
 });
-// and disable conflicting activities
