@@ -76,3 +76,7 @@ $('[type="checkbox"]').click((e) => {
         }
     }
 });
+// Now the payment section:
+// Hide the "Select Payment Method" option
+$('[value="select_method"]').remove();
+// Set the behaviour for each payment method selected
