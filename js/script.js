@@ -80,3 +80,22 @@ $('[type="checkbox"]').click((e) => {
 // Hide the "Select Payment Method" option
 $('[value="select_method"]').remove();
 // Set the behaviour for each payment method selected
+// Listen for a change in the payment options
+$('select #payment').change(function() {
+    // Get the value of the payment option selected
+    const paymentOption = $(this).children('option:selected').val;
+    // Set the behaviour for each payment option
+    if (paymentOption === 'credit card') {
+        $('div #credit-card').show();
+        $('div p:first').hide();
+        $('div p:last').hide();
+    } else if (paymentOption === 'paypal') {
+        $('div #credit-card').hide();
+        $('div p:first').show();
+        $('div p:last').hide();
+    } else if (paymentOption === 'bitcoin') {
+        $('div #credit-card').hide();
+        $('div p:first').hide();
+        $('div p:last').show();
+    }
+});
