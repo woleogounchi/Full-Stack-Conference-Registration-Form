@@ -1,4 +1,10 @@
+// Run the javascript code whenever the DOM is ready
+$(document).ready(function() {});
+// We start by declaring our variables
 let total = 0;
+const creditCard = $('div #credit-card');
+const payPal = $('div p:first');
+const bitCoin = $('div p:last');
 // Focus on the name input
 $('#name').focus();
 // Target the ‘Other’ input field, and hide it initially
@@ -80,22 +86,26 @@ $('[type="checkbox"]').click((e) => {
 // Hide the "Select Payment Method" option
 $('[value="select_method"]').remove();
 // Set the behaviour for each payment method selected
+// Keep 'Paypal' and 'Bitcoin' payment options hidden by default
+payPal.hide();
+bitCoin.hide();
 // Listen for a change in the payment options
-$('select #payment').change(function() {
+$('#payment').change(function() {
     // Get the value of the payment option selected
-    const paymentOption = $(this).children('option:selected').val;
+    const paymentOption = $(this).children('option:selected').val();
     // Set the behaviour for each payment option
     if (paymentOption === 'credit card') {
-        $('div #credit-card').show();
-        $('div p:first').hide();
-        $('div p:last').hide();
+        creditCard.show();
     } else if (paymentOption === 'paypal') {
-        $('div #credit-card').hide();
-        $('div p:first').show();
-        $('div p:last').hide();
+        creditCard.hide();
+        payPal.show();
+        bitCoin.hide();
     } else if (paymentOption === 'bitcoin') {
-        $('div #credit-card').hide();
-        $('div p:first').hide();
-        $('div p:last').show();
+        creditCard.hide();
+        payPal.hide();
+        bitCoin.show();
     }
 });
+// Form validation
+// We have to create a validation for each of the required section of the form
+// We start with the name section
