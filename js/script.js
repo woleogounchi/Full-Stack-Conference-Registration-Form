@@ -5,6 +5,20 @@ $(document).ready(function() {
     const creditCard = $('div #credit-card');
     const payPal = $('div p:first');
     const bitCoin = $('div p:last');
+    const checkboxes = $('[type="checkbox"]');
+    const $name = $('#name');
+    const $nameRegEx = /^\S+$/;
+    const $mail = $('#mail');
+    const $mailRegEx = /^[^@.]+@[^@.]+\.[^@.]+$/i;
+    const $ccNum = $('#cc-num');
+    const $ccRegEx = /^(\d){13,16}$/;
+    const $zipCode = $('#zip');
+    const $zipRegEx = /^(\d){5}$/;
+    const $cvvNum = $('#cvv');
+    const $cvvRegEx = /^(\d){3}$/;
+    const $errorField = $('span');
+    const $errorMessage = 'Invalid entry. Please try again.';
+    const $activityField = $('.activity');
     // Focus on the name input
     $('#name').focus();
     // Target the ‘Other’ input field, and hide it initially
@@ -47,6 +61,9 @@ $(document).ready(function() {
         const activityChecked = $(e.target);
         // Get the text inside the checked activity label
         const insideText = activityChecked.parent().text();
+        const dashIndex = insideText.indexOf('—');
+        const comIndex = insideText.indexOf(',');
+        const dayNtime = insideText.slice(dashIndex + 1, comIndex);
         // Get the dollar sign index in the text to locate
         // the activity cost value
         const dolIndex = insideText.indexOf('$')
@@ -63,12 +80,6 @@ $(document).ready(function() {
             $('.total').text('The total price is: $' + total);
         }
         // ========Disabling Conflicting Activities========
-        // first we need to fetch the day and time for each activity 
-        const dashIndex = insideText.indexOf('—');
-        const comIndex = insideText.indexOf(',');
-        const dayNtime = insideText.slice(dashIndex + 1, comIndex);
-        // We may now disable every activity happening at the same day and time 
-        const checkboxes = $('[type="checkbox"]');
         for (let i = 0; i < checkboxes.length; i++) {
             const checkboxText = checkboxes.eq(i).parent().text();
             if (checkboxText.includes(dayNtime) && checkboxText !== insideText) {
@@ -107,25 +118,56 @@ $(document).ready(function() {
         }
     });
     // ========Form validation========
-    // Name Validation
-    const $name = $('#name');
-    const $nameInput = $name.val();
-
-    function nameValidation() {
-        if ($nameInput == '') {
-            $name.css({
-                border: "2px solid red"
-            });
-            $name.after('<span id="error-name">Please enter a valid name</span>');
-            $('#error-name').css('color', 'red');
+    // Function that will be used to validate both the name and email address entries
+    function validation(field, regex) {
+        if (regex.test(field.val()) === false) {
+            field.addClass('error');
+            field.after($errorField.text($errorMessage).addClass('error-message'));
             return false;
         } else {
-            $name.after('');
+            field.addClass('valid');
             return true;
         }
     };
-
-    $name.on('change', function(e) {
-        nameValidation();
+    // Function to validate that at least one activity has been checcked
+    function activityValidation() {
+        let j = 0;
+        for (i = 0; i < $('input:checkbox').length; i++) {
+            if ($('input:checkbox')[i].checked) {
+                j++;
+            }
+        }
+        if (j === 0) {
+            $('.activities')
+                .append($('p')
+                    .text('Please select an activity')
+                    .css('display', 'block')
+                    .addClass('error-message'));
+        }
+    };
+    // An event listener to validate everything when the submit button us clicked
+    $('button').click((e) => {
+        const $payment = $('#payment');
+        const $nameValid = validation($name, $nameRegEx);
+        const $mailValid = validation($mail, $mailRegEx);
+        const $activityValid = activityValidation();
+        const $ccValid = validation($ccNum, $ccRegEx);
+        const $zipValid = validation($zipCode, $zipRegEx);
+        const $cvvValid = validation($cvvNum, $cvvRegEx);
+        if ($payment.val() === 'credit card') {
+            if ($nameValid && $mailValid && $activityValid && $ccValid && $zipValid && $cvvValid) {
+                $('form').submit();
+                alert('Thank you for registering!');
+            } else {
+                e.preventDefault();
+            }
+        } else {
+            if ($nameValid && $mailValid && $activityValid) {
+                $('form').submit();
+                alert('Thank you for registering!');
+            } else {
+                e.preventDefault();
+            }
+        }
     });
 });
