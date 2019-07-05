@@ -16,8 +16,7 @@ $(document).ready(function() {
     const $zipRegEx = /^(\d){5}$/;
     const $cvvNum = $('#cvv');
     const $cvvRegEx = /^(\d){3}$/;
-    const $errorField = $('span');
-    const $errorMessage = 'Invalid entry. Please try again.';
+    const errorMessage = 'Invalid entry. Please try again.';
     const $activityField = $('.activity');
     // Focus on the name input
     $('#name').focus();
@@ -93,6 +92,7 @@ $(document).ready(function() {
             }
         }
     });
+
     // ========Payment Section========
     // Hide the "Select Payment Method" option
     $('[value="select_method"]').remove();
@@ -122,7 +122,7 @@ $(document).ready(function() {
     function validation(field, regex) {
         if (regex.test(field.val()) === false) {
             field.addClass('error');
-            field.after($errorField.text($errorMessage).addClass('error-message'));
+            field.after(`<span class="error-message">${errorMessage}</span>`);
             return false;
         } else {
             field.addClass('valid');
@@ -139,12 +139,10 @@ $(document).ready(function() {
         }
         if (j === 0) {
             $('.activities')
-                .append($('p')
-                    .text('Please select an activity')
-                    .css('display', 'block')
-                    .addClass('error-message'));
+                .append($('<p class="error-message">Please pick at least one activity.</p>'))
+                .css('display', 'block');
         }
-    };
+    }
     // An event listener to validate everything when the submit button us clicked
     $('button').click((e) => {
         const $payment = $('#payment');
