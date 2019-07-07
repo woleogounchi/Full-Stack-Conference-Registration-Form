@@ -22,8 +22,12 @@ $(document).ready(function() {
     $('#name').focus();
     // Target the ‘Other’ input field, and hide it initially
     $("#other-title").hide();
-    // Hide the 'select theme' option element in the 'design' menu
-    $('#design option').eq(0).text("");
+    $('#title').on('change', () => {
+        if ($('#title option:selected').val() === 'other') {
+            $("#other-title").show();
+        }
+    });
+
     // Update the 'color' field to read 'Please select a T-Shirt theme'
     $('#color option:first').before('<option selected="selected">Please select a T-Shirt theme</options>');
     // Hide the colors in the “Color” drop down menu
@@ -35,16 +39,17 @@ $(document).ready(function() {
         drop down menu, show the three “js puns” option elements, and update the “Color” 
         field to the first available color. */
         if ($('#design option:selected').val() === "js puns") {
-            $('#color option').eq(1).attr('selected', true);
             for (let i = 1; i <= 3; i++) {
+                $('#color option').eq(1).prop('selected', true);
                 $('#color option').eq(i).show();
+                $('#color option').eq(i + 3).hide();
             }
             /* If “heart js” is selected, hide the three “js puns” option elements in the “Color” 
             drop down menu, show the three “heart js” option elements, and update the “Color” 
             field to the first available color. */
         } else if ($('#design option:selected').val() === "heart js") {
-            $('#color option').eq(4).attr('selected', true);
             for (let i = 1; i <= 3; i++) {
+                $('#color option').eq(4).prop('selected', true);
                 $('#color option').eq(i).hide();
                 $('#color option').eq(i + 3).show();
             }
@@ -126,9 +131,10 @@ $(document).ready(function() {
             return false;
         } else {
             field.addClass('valid');
+            $('span .error-message').remove();
             return true;
         }
-    };
+    }
     // Function to validate that at least one activity has been checcked
     function activityValidation() {
         let j = 0;
@@ -141,6 +147,9 @@ $(document).ready(function() {
             $('.activities')
                 .append($('<p class="error-message">Please pick at least one activity.</p>'))
                 .css('display', 'block');
+            return false;
+        } else {
+            return true;
         }
     }
     // An event listener to validate everything when the submit button us clicked
