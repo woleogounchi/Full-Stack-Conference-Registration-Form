@@ -16,7 +16,7 @@ $(document).ready(function() {
     const $zipRegEx = /^(\d){5}$/;
     const $cvvNum = $('#cvv');
     const $cvvRegEx = /^(\d){3}$/;
-    const errorMessage = 'Invalid entry. Please try again.';
+    // const errorMessage = 'Invalid entry. Please try again.';
     const $activityField = $('.activity');
     // Focus on the name input
     $('#name').focus();
@@ -127,11 +127,11 @@ $(document).ready(function() {
     function validation(field, regex) {
         if (regex.test(field.val()) === false) {
             field.addClass('error');
-            field.after(`<span class="error-message">${errorMessage}</span>`);
+            field.after('<span class="error-message">Invalid entry. Please try again.</span>');
             return false;
         } else {
             field.addClass('valid');
-            $('span .error-message').remove();
+            $('.error-message').remove();
             return true;
         }
     }
@@ -145,10 +145,11 @@ $(document).ready(function() {
         }
         if (j === 0) {
             $('.activities')
-                .append($('<p class="error-message">Please pick at least one activity.</p>'))
+                .append($('<span class="error-message">Please pick at least one activity.</span>'))
                 .css('display', 'block');
             return false;
         } else {
+            $(".error-message").remove();
             return true;
         }
     }
