@@ -126,11 +126,13 @@ $(document).ready(function() {
     // Function that will be used to validate both the name and email address entries
     function validation(field, regex) {
         if (regex.test(field.val()) === false) {
+            field.removeClass('valid');
             field.addClass('error');
             field.after('<span class="error-message">Invalid entry. Please try again.</span>');
             return false;
         } else {
             field.addClass('valid');
+            field.removeClass('error');
             $('.error-message').remove();
             return true;
         }
